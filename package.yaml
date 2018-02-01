@@ -1,0 +1,25 @@
+name:                extensible-example
+version:             0.1.0.0
+#synopsis:
+#description:
+homepage:            https://github.com/waddlaw/extensible-example#readme
+license:             BSD3
+author:              shinya yamaguchi
+maintainer:          ingroze@gmail.com
+copyright:           Copyright (c) 2017 Shinya Yamaguchi
+category:            Your Projects Category
+extra-source-files:
+- README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - extensible
+  - lens
+  - singletons
+  - text
+  - ghc-prim
+
+executables:
+  extensible-example:
+    source-dirs:      src
+    main:             Main.hs
