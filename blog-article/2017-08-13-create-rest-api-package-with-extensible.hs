@@ -53,7 +53,6 @@ type GenreInformation = Int
 type TagGroupWrap = Int
 
 {- FromJSON は extensible クラスのインスタンスになっているので現在は定義せずに利用できる
-
 instance Forall (KeyValue KnownSymbol FromJSON) xs => FromJSON (Record xs) where
   parseJSON = withObject "Object" $
     \v -> hgenerateFor (Proxy :: Proxy (KeyValue KnownSymbol FromJSON)) $
@@ -130,6 +129,13 @@ instance Default Text where
 instance Forall (KeyValue KnownSymbol Default) xs => Default (Record xs) where
   def = runIdentity $ hgenerateFor
     (Proxy :: Proxy (KeyValue KnownSymbol Default)) (const $ pure (Field def))
+
+{- htabulateFor と TypeApplications を使うとコードが少しスッキリする
+instance Forall (KeyValue KnownSymbol Default) xs => Default (Record xs) where
+  def = htabulateFor poly (const . Field $ def)
+    where
+      poly = Proxy @ (KeyValue KnownSymbol Default)
+-}
 
 param :: IchibaItemSearchParam
 param = def & #keyword .~ "Rakuten"
