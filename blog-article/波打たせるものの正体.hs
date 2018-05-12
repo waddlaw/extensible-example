@@ -96,6 +96,6 @@ makeRec3 = runTangles tangles (wrench nil)
 
 main :: IO ()
 main = do
-  makeRec >>= print
+  makeRec  >>= print
   makeRec2 >>= print
   makeRec3 >>= print
