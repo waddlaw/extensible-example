@@ -9,6 +9,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
+{-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
 import           Data.Extensible
 
@@ -24,7 +25,7 @@ type Address = Record
    , "address"  :> String
    ]
 
-getPersonId :: (("personId" :> Int) ∈ xs) => Record xs -> Int
+getPersonId :: Associate "personId" Int xs => Record xs -> Int
 getPersonId = view #personId
 
 fubuki :: Person
@@ -37,3 +38,10 @@ fubuki2 = shrink
         $ #name     @= ("吹雪" :: String)
        <: #personId @= (1 :: Int)
        <: nil
+
+main :: IO ()
+main = do
+  print fubuki
+  print fubuki2
+  print $ getPersonId fubuki
+  print $ getPersonId fubuki2
