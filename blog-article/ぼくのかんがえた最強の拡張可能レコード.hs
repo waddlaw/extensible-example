@@ -6,13 +6,13 @@
 -}
 
 {-# LANGUAGE DataKinds        #-}
-{-# LANGUAGE TypeOperators    #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
-{-# LANGUAGE FlexibleContexts     #-}
+{-# LANGUAGE TypeOperators    #-}
 
-import Data.Extensible
+import           Data.Extensible
 
-import Control.Lens          ((^.), view)
+import           Control.Lens    (view, (^.))
 
 type Person = Record
   '[ "personId" :> Int
