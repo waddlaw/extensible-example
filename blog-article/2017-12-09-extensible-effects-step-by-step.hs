@@ -7,20 +7,22 @@
    --package monad-logger
 -}
 
-{-# LANGUAGE DataKinds        #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeOperators    #-}
+{-# LANGUAGE DataKinds            #-}
+{-# LANGUAGE FlexibleContexts     #-}
+{-# LANGUAGE FlexibleInstances    #-}
+{-# LANGUAGE TypeApplications     #-}
+{-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE TypeSynonymInstances #-}
-{-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE UndecidableInstances #-}
 
 import           Data.Extensible
 import           Data.Extensible.Effect.Default
 
 import           Control.Monad.Except           (throwError)
-import           Control.Monad.IO.Class         (liftIO, MonadIO)
-import           Control.Monad.Logger           (MonadLogger, LoggingT, runStdoutLoggingT, monadLoggerLog)
+import           Control.Monad.IO.Class         (MonadIO, liftIO)
+import           Control.Monad.Logger           (LoggingT, MonadLogger,
+                                                 monadLoggerLog,
+                                                 runStdoutLoggingT)
 import           Control.Monad.Reader           (ask, local)
 import           Control.Monad.State            (MonadState, get, put)
 import           Control.Monad.Writer           (tell)
