@@ -16,13 +16,13 @@ import           Data.Extensible
 import           Control.Lens    (view, (^.))
 
 type Person = Record
-  '[ "personId" :> Int
-   , "name"     :> String
+  '[ "personId" >: Int
+   , "name"     >: String
    ]
 
 type Address = Record
-  '[ "personId" :> Int
-   , "address"  :> String
+  '[ "personId" >: Int
+   , "address"  >: String
    ]
 
 getPersonId :: Associate "personId" Int xs => Record xs -> Int

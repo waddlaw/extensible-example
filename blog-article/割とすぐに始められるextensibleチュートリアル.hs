@@ -29,9 +29,9 @@ name
 -}
 
 type Animal = Record
-  '[ "name"       :> String
-   , "collective" :> String
-   , "cry"        :> Maybe String
+  '[ "name"       >: String
+   , "collective" >: String
+   , "cry"        >: Maybe String
    ]
 
 dove :: Animal
