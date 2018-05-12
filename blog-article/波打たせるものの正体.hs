@@ -84,7 +84,10 @@ instance MakeRec2 ("baz2" :> Double) where
   make2 _ = lift readLn
 
 instance MakeRec2 ("qux2" :> Bool) where
-  make2 _ = lift randomIO
+  make2 _ = do
+    str <- lasso foo2
+    x <- lasso baz2
+    return $ str == show x
 
 tangles :: Comp (TangleT (Field Identity) Fields IO) (Field Identity) :* Fields
 tangles = htabulateFor (Proxy @ MakeRec2) (\m -> Comp $ Field . pure <$> make2 m)
