@@ -59,6 +59,7 @@ main = do
   print $ swan ^. name
   print $ swan ^. #name
   print $ swan & collective .~ "bank"
+  print $ swan & #collective .~ "bank"
 
   print $ collectiveOf dove
   print $ collectiveOf swan
