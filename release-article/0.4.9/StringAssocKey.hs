@@ -12,11 +12,8 @@
 
 import           Data.Extensible
 
-import           Data.Functor.Identity (runIdentity)
-import           Data.Proxy            (Proxy (Proxy))
-import           GHC.TypeLits          (KnownSymbol)
-
-import           Data.Typeable         (Typeable, typeOf)
+import           Data.Proxy      (Proxy (Proxy))
+import           GHC.TypeLits    (KnownSymbol)
 
 type Person = Record
   '[ "name" :> String
@@ -28,12 +25,8 @@ person = #name @= "bigmoon"
       <: #age  @= 10
       <: nil
 
-debug :: Person -> IO ()
-debug = hfoldMapFor poly (print . fork show typeOf . runIdentity . getField)
-  where
-    poly = Proxy @ (ValueIs (And Show Typeable))
-    fork f g x = (f x, g x)
+keys :: Forall (KeyIs KnownSymbol) xs => proxy xs -> [String]
+keys xs = henumerateFor (Proxy @ (KeyIs KnownSymbol)) xs ((:) . stringAssocKey) []
 
 main :: IO ()
-main = do
-  debug person
+main = print $ keys person
