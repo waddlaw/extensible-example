@@ -86,7 +86,7 @@ instance MakeRec2 ("baz2" :> Double) where
 instance MakeRec2 ("qux2" :> Bool) where
   make2 _ = do
     str <- lasso foo2
-    x <- lasso baz2
+    x   <- lasso baz2
     return $ str == show x
 
 tangles :: Comp (TangleT (Field Identity) Fields IO) (Field Identity) :* Fields
