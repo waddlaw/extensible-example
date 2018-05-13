@@ -2,6 +2,7 @@
 {- stack repl
    --resolver nightly-2018-05-12
    --package extensible-0.4.9
+   --package text
 -}
 
 {-# LANGUAGE DataKinds        #-}
@@ -13,6 +14,9 @@
 import           Data.Extensible
 
 import           Data.Proxy      (Proxy (Proxy))
+import           Data.String     (IsString)
+import           Data.Text       (Text)
+import qualified Data.Text.IO    as TIO (putStrLn)
 import           GHC.TypeLits    (KnownSymbol)
 
 type Person = Record
@@ -25,8 +29,10 @@ person = #name @= "bigmoon"
       <: #age  @= 10
       <: nil
 
-keys :: Forall (KeyIs KnownSymbol) xs => proxy xs -> [String]
+keys :: (IsString key, Forall (KeyIs KnownSymbol) xs) => proxy xs -> [key]
 keys xs = henumerateFor (Proxy @ (KeyIs KnownSymbol)) xs ((:) . stringAssocKey) []
 
 main :: IO ()
-main = print $ keys person
+main = do
+  mapM_ putStrLn $ keys person
+  mapM_ TIO.putStrLn $ keys person
