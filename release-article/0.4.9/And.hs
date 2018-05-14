@@ -30,9 +30,9 @@ person = #name @= "bigmoon"
       <: nil
 
 debug :: Forall (ValueIs (And Show Typeable)) xs => Record xs -> IO ()
-debug = hfoldMapFor poly (print . fork id typeOf . runIdentity . getField)
+debug = hfoldMapFor c (print . fork id typeOf . runIdentity . getField)
   where
-    poly = Proxy @ (ValueIs (And Show Typeable))
+    c = Proxy @ (ValueIs (And Show Typeable))
     fork f g x = (f x, g x)
 
 main :: IO ()

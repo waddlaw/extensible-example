@@ -30,7 +30,7 @@ type ExampleM = Eff '[ "IO" >: ResourceT IO ]
 main :: IO ()
 main = runResourceT . retractEff . runConduit $
   bracketP (openFile "data.csv" ReadMode) hClose $ \handle ->
-    (sourceHandle handle :: ConduitT i ByteString ExampleM ()) .| printC
+    (sourceHandle handle :: ConduitT i ByteString ExampleM ()) .| stdoutC
 
 instance (Associate "IO" (ResourceT IO) xs) => MonadResource (Eff xs) where
   liftResourceT = liftEff (Proxy @ "IO")
