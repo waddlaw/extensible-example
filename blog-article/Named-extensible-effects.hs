@@ -14,12 +14,13 @@
 
 import Data.Extensible
 
-import Control.Monad.State.Class (MonadState, get, put)
+import Control.Monad.State (MonadState, get, put)
 
 increment :: (Num a, MonadState a m) => m ()
 increment = get >>= put . (+1)
 
-test :: (Associate "foo" ((,) String) xs, Associate "bar" ((,) String) xs) => Eff xs ()
+test :: (Associate "foo" ((,) String) xs, Associate "bar" ((,) String) xs)
+     => Eff xs ()
 test = do
   tellEff #foo "Hello "
   tellEff #bar "foo"
