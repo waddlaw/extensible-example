@@ -11,6 +11,7 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE TypeOperators        #-}
 {-# LANGUAGE UndecidableInstances #-}
+{-# LANGUAGE TypeApplications     #-}
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
 import           Data.Extensible
@@ -32,4 +33,4 @@ main = runResourceT . retractEff . runConduit $
     (sourceHandle handle :: ConduitT i ByteString ExampleM ()) .| printC
 
 instance (Associate "IO" (ResourceT IO) xs) => MonadResource (Eff xs) where
-  liftResourceT = liftEff (Proxy :: Proxy "IO")
+  liftResourceT = liftEff (Proxy @ "IO")
