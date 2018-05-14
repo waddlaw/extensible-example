@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible-0.4.9
+   --resolver nightly-2018-05-14
+   --package extensible
    --package prettyprinter
 -}
 
@@ -11,8 +11,8 @@
 
 import           Data.Extensible
 
-import Data.Text.Prettyprint.Doc
-import Data.Text.Prettyprint.Doc.Render.Text (putDoc)
+import           Data.Text.Prettyprint.Doc             (pretty)
+import           Data.Text.Prettyprint.Doc.Render.Text (putDoc)
 
 type Person = Record
   '[ "name" :> String

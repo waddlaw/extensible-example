@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible-0.4.9
+   --resolver nightly-2018-05-14
+   --package extensible
    --package text
 -}
 
