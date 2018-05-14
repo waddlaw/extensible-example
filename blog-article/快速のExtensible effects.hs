@@ -9,25 +9,32 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE TemplateHaskell  #-}
 
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
 import           Data.Extensible
+import           Data.Extensible.Effect.Default
 
-import           Control.Monad.State (MonadState, get, put)
+import           Control.Monad.State            (MonadState, modify)
 
 increment :: (Num a, MonadState a m) => m ()
-increment = get >>= put . (+1)
+increment = modify (+1)
 
-test :: (Associate "foo" ((,) String) xs, Associate "bar" ((,) String) xs)
-     => Eff xs ()
+test :: (Associate "foo" (WriterEff String) xs, Associate "bar" (WriterEff String) xs) => Eff xs ()
 test = do
   tellEff #foo "Hello "
-  tellEff #bar "foo"
+  tellEff #bar "hoge"
   tellEff #foo "world"
-  tellEff #bar "bar"
+  tellEff #bar "fuga"
+
+decEffects [d|
+  data Blah a b x where
+    Blah :: Int -> a -> Blah a b b
+  |]
 
 main :: IO ()
 main = do
+  print $ leaveEff $ runStateDef increment 0
   print $ leaveEff $ runWriterEff @ "foo" $ runWriterEff @ "bar" test
   print $ leaveEff $ runWriterEff @ "bar" $ runWriterEff @ "foo" test

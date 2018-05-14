@@ -2,30 +2,30 @@
 {- stack repl
    --resolver nightly-2018-05-14
    --package extensible
-   --package mtl
 -}
 
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeApplications #-}
+{-# LANGUAGE ConstraintKinds  #-}
 
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
 import           Data.Extensible
+import           Data.Extensible.Effect.Default
 
-import           Control.Monad.State (MonadState, get, put)
+type FooBarM xs =
+  ( Associate "foo" (WriterEff String) xs
+  , Associate "bar" (WriterEff String) xs
+  )
 
-increment :: (Num a, MonadState a m) => m ()
-increment = get >>= put . (+1)
-
-test :: (Associate "foo" ((,) String) xs, Associate "bar" ((,) String) xs)
-     => Eff xs ()
+test :: FooBarM xs => Eff xs ()
 test = do
   tellEff #foo "Hello "
-  tellEff #bar "foo"
+  tellEff #bar "hoge"
   tellEff #foo "world"
-  tellEff #bar "bar"
+  tellEff #bar "fuga"
 
 main :: IO ()
 main = do
