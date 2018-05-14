@@ -13,7 +13,7 @@
 import           Data.Extensible
 import           Data.Extensible.Effect.Default
 
-import           Control.Monad.Logger           (LoggingT, runStdoutLoggingT, logDebug)
+import           Control.Monad.Logger           (LoggingT, runStdoutLoggingT, logDebugN)
 
 type ExampleM = Eff '[ "Logger" >: LoggingT IO ]
 
@@ -23,5 +23,5 @@ run = runStdoutLoggingT . retractEff
 main :: IO ()
 main = do
   res <- run $ do
-    $(logDebug) "This is a debug log message"
+    logDebugN "This is a debug log message"
   print res
