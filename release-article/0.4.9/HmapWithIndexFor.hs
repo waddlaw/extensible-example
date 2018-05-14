@@ -43,6 +43,6 @@ toDefaultRecord = hmapWithIndexFor poly $ \_m -> Field . Identity . def . view _
 
 main :: IO ()
 main = do
-  print $ person
+  print person
   print $ toJSONRecord person
   print $ toDefaultRecord person
