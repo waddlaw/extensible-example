@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver nightly-2018-05-18
+   --package extensible-0.4.9
    --package lens
 -}
 
@@ -10,10 +10,10 @@
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
 
-import           Data.Extensible
-import           Data.Extensible.GetOpt
+import Data.Extensible
+import Data.Extensible.GetOpt
 
-import           Control.Lens           (folded, (^.), (^?))
+import Control.Lens (folded, (^.), (^?))
 
 type Options = RecordOf OptDescr'
   '[ "verbose" >: Int
