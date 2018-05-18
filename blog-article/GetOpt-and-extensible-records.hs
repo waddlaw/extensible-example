@@ -48,7 +48,12 @@ main = getOpt Permute options <$> getArgs >>= \case
     name <- getProgName
     die $ unlines es ++ usageInfo name options
 
-opts :: RecordOf OptDescr' [ "verbose" >: Int, "extra" >: [String] ]
+type OptionsRecord = RecordOf OptDescr'
+  '[ "verbose" >: Int
+   , "extra"   >: [String]
+   ]
+
+opts :: OptionsRecord
 opts = #verbose @= optNoArg  "v" ["verbose"]       "verbose"
     <: #extra   @= optReqArg "e" ["extra"]   "ARG" "extra arguments"
     <: nil
