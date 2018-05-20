@@ -9,8 +9,6 @@
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-import Data.Proxy
-
 data Nat = Zero | Succ Nat
 
 -- | 型レベル add
