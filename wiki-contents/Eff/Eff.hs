@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package mtl
 -}
 
@@ -11,11 +11,11 @@
 import Data.Extensible
 import Data.Extensible.Effect.Default
 
-import Control.Monad        (replicateM_)
+import Control.Monad (replicateM_)
 import Control.Monad.Reader (ask)
-import Control.Monad.State  (get, put)
+import Control.Monad.State (get, put)
 import Control.Monad.Writer (tell)
-import Data.Monoid          (Sum (Sum))
+import Data.Monoid (Sum (Sum))
 
 type ExampleM = Eff
   '[ ReaderDef Int

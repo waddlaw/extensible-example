@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
@@ -10,11 +10,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
+
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
 import Data.Extensible
 
-import Control.Lens    ((^.))
+import Control.Lens ((^.))
 
 type Person1 = Record
   '[ "name"     :> String
@@ -29,8 +30,8 @@ type Person2 = Record
    ]
 
 type NameAge xs =
-  ( Associate "name" String xs
-  , Associate "age"  Int    xs
+  ( Lookup xs "name" String
+  , Lookup xs "age"  Int
   )
 
 getNameAge :: NameAge xs => Record xs -> (String, Int)

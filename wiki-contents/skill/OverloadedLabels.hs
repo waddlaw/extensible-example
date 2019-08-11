@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-22
-   --package extensible-0.4.9
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
    --package yaml
 -}
@@ -13,12 +13,11 @@
 
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Control.Lens    ((^.))
-import           Data.Proxy      (Proxy (Proxy))
+import Control.Lens    ((^.))
 
-import           Data.Yaml       (decodeFileEither, prettyPrintParseException)
+import Data.Yaml (decodeFileEither, prettyPrintParseException)
 
 type Package = Record '[ "default-extensions" >: [String] ]
 

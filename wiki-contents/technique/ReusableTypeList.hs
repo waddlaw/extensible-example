@@ -1,16 +1,17 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-18
-   --package extensible-0.4.9
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
+
 {-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
 
 import Data.Extensible
 
-import Control.Lens (( # ))
+import Control.Lens ((#))
 
 type RGBField  = '[ "rgb"  >: (Int, Int, Int) ]
 type CMYKField = '[ "cmyk" >: (Int, Int, Int, Int) ]

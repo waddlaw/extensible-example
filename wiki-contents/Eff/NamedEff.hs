@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
 -}
 
 {-# LANGUAGE DataKinds        #-}
@@ -12,12 +12,12 @@
 
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
-import           Data.Extensible.Effect.Default
+import Data.Extensible
+import Data.Extensible.Effect.Default
 
 type FooBarM xs =
-  ( Associate "foo" (WriterEff String) xs
-  , Associate "bar" (WriterEff String) xs
+  ( Lookup xs "foo" (WriterEff String)
+  , Lookup xs "bar" (WriterEff String)
   )
 
 test :: FooBarM xs => Eff xs ()

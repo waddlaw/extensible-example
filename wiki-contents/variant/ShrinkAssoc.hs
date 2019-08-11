@@ -1,14 +1,14 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-29
-   --package extensible-0.4.9
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
-{-# LANGUAGE DataKinds         #-}
-{-# LANGUAGE FlexibleContexts  #-}
-{-# LANGUAGE OverloadedLabels  #-}
-{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedLabels #-}
+{-# LANGUAGE TypeOperators    #-}
 
 import Data.Extensible
 

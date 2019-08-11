@@ -1,6 +1,6 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-19
+   --resolver lts-14.0
 -}
 {-# LANGUAGE DataKinds            #-}
 {-# LANGUAGE GADTs                #-}

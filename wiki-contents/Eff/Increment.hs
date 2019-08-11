@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package mtl
 -}
 
@@ -10,7 +10,7 @@
 import Data.Extensible
 import Data.Extensible.Effect.Default
 
-import Control.Monad.State            (MonadState, modify)
+import Control.Monad.State (MonadState, modify)
 
 increment :: (Num a, MonadState a m) => m ()
 increment = modify (+1)
