@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-11
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package text
    --package lens
 -}
@@ -11,11 +11,10 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TypeOperators     #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Control.Lens    (( # ), (^.))
-import           Data.Proxy      (Proxy (Proxy))
-import           Data.Text       (Text)
+import Control.Lens ((#), (^.))
+import Data.Text (Text)
 
 type ID = Text
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-11
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package text
    --package constraints
    --package req
@@ -9,30 +9,28 @@
    --package lens
 -}
 
-{-# LANGUAGE DataKinds            #-}
-{-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE OverloadedLabels     #-}
-{-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE ScopedTypeVariables  #-}
-{-# LANGUAGE TypeOperators        #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE FlexibleInstances   #-}
+{-# LANGUAGE OverloadedLabels    #-}
+{-# LANGUAGE OverloadedStrings   #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications    #-}
+{-# LANGUAGE TypeOperators       #-}
 
-import           Data.Extensible
-import           Data.Extensible.Dictionary (library)
+import Data.Extensible
 
-import           Control.Lens               ((&), (.~))
-import           Data.Functor.Identity      (Identity (..), runIdentity)
-import           Data.Proxy                 (Proxy (Proxy))
-import           GHC.TypeLits               (KnownSymbol, symbolVal)
+import Control.Lens ((&), (.~))
+import Data.Functor.Identity (Identity (..), runIdentity)
+import GHC.TypeLits (symbolVal)
 
-import           Control.Applicative        (liftA2)
-import           Data.Constraint            (Dict (..))
-import           Data.Default               (Default, def)
-import           Data.Monoid                (Endo (..))
-import           Data.String                (fromString)
-import           Data.Text                  (Text)
-import           Network.HTTP.Req           (QueryParam, (=:))
+import Control.Applicative (liftA2, Const(..))
+import Data.Constraint (Dict (..))
+import Data.Default (Default, def)
+import Data.Monoid (Endo (..))
+import Data.String (fromString)
+import Data.Text (Text)
+import Network.HTTP.Req (QueryParam, (=:))
 
 type IchibaItems = Record
   '[ "count"            >: Int
@@ -48,19 +46,9 @@ type IchibaItems = Record
    ]
 
 -- 適当に定義
-type ItemWrap = Int
+type ItemWrap         = Int
 type GenreInformation = Int
-type TagGroupWrap = Int
-
-{- FromJSON は extensible クラスのインスタンスになっているので現在は定義せずに利用できる
-instance Forall (KeyValue KnownSymbol FromJSON) xs => FromJSON (Record xs) where
-  parseJSON = withObject "Object" $
-    \v -> hgenerateFor (Proxy :: Proxy (KeyValue KnownSymbol FromJSON)) $
-    \m -> let k = symbolVal (proxyAssocKey m) in
-      case HM.lookup (fromString k) v of
-        Just a -> Field . return <$> parseJSON a
-        Nothing -> fail $ "Missing key: " `mappend` k
--}
+type TagGroupWrap     = Int
 
 type IchibaItemSearchParam = Record
   '[ "keyword"                 >: Text
@@ -114,11 +102,11 @@ instance ToParam a => ToParam (Identity a) where
 class ToParams a where
   toParams :: (QueryParam param, Monoid param) => a -> param
 
-instance Forall (KeyValue KnownSymbol ToParam) xs => ToParams (Record xs) where
-  toParams = flip appEndo mempty . hfoldMap getConst' . hzipWith
-    (\(Comp Dict) -> Const' . Endo . (<>) .
-      liftA2 toParam (fromString . symbolVal . proxyAssocKey) getField)
-    (library :: Comp Dict (KeyValue KnownSymbol ToParam) :* xs)
+instance Forall (KeyTargetAre KnownSymbol ToParam) xs => ToParams (Record xs) where
+  toParams = flip appEndo mempty . hfoldMap getConst . hzipWith
+    (\(Comp Dict) -> Const . Endo . (<>) .
+      liftA2 toParam (fromString . symbolVal . proxyKeyOf) getField)
+    (library :: xs :& Comp Dict (KeyTargetAre KnownSymbol ToParam))
 
 instance Default a => Default (Identity a) where
   def = Identity def
@@ -126,16 +114,10 @@ instance Default a => Default (Identity a) where
 instance Default Text where
   def = mempty
 
-instance Forall (KeyValue KnownSymbol Default) xs => Default (Record xs) where
-  def = runIdentity $ hgenerateFor
-    (Proxy :: Proxy (KeyValue KnownSymbol Default)) (const $ pure (Field def))
-
-{- htabulateFor と TypeApplications を使うとコードが少しスッキリする
-instance Forall (KeyValue KnownSymbol Default) xs => Default (Record xs) where
-  def = htabulateFor poly (const . Field $ def)
+instance Forall (KeyTargetAre KnownSymbol Default) xs => Default (Record xs) where
+  def = htabulateFor c (const . Field $ def)
     where
-      poly = Proxy @ (KeyValue KnownSymbol Default)
--}
+      c = Proxy @(KeyTargetAre KnownSymbol Default)
 
 param :: IchibaItemSearchParam
 param = def & #keyword .~ "Rakuten"

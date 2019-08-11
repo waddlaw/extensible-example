@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
@@ -10,16 +10,18 @@
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
 
-import           Data.Extensible
-import           Data.Extensible.GetOpt
+import Data.Extensible
+import Data.Extensible.GetOpt
 
-import           Control.Lens           (folded, (^.), (^?))
+import Control.Lens (folded, (^.), (^?))
 
-import           System.Console.GetOpt  (ArgDescr (NoArg, ReqArg),
-                                         ArgOrder (Permute), OptDescr (Option),
-                                         getOpt, usageInfo)
-import           System.Environment     (getArgs, getProgName)
-import           System.Exit            (die)
+import System.Console.GetOpt (
+  ArgDescr (NoArg, ReqArg), 
+  ArgOrder (Permute), 
+  OptDescr (Option), 
+  getOpt, usageInfo)
+import System.Environment (getArgs, getProgName)
+import System.Exit (die)
 
 data Options = Options
   { verbose :: Bool

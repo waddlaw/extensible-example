@@ -1,28 +1,27 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package random
    --package transformers
 -}
 
-{-# LANGUAGE DataKinds            #-}
-{-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE OverloadedLabels     #-}
-{-# LANGUAGE PolyKinds            #-}
-{-# LANGUAGE RecordWildCards      #-}
-{-# LANGUAGE TemplateHaskell      #-}
-{-# LANGUAGE TypeApplications     #-}
-{-# LANGUAGE TypeOperators        #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedLabels  #-}
+{-# LANGUAGE PolyKinds         #-}
+{-# LANGUAGE RecordWildCards   #-}
+{-# LANGUAGE TemplateHaskell   #-}
+{-# LANGUAGE TypeApplications  #-}
+{-# LANGUAGE TypeOperators     #-}
+
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Control.Monad.Trans.Class (lift)
-import           Data.Proxy                (Proxy (Proxy))
-import           System.Random             (randomIO)
+import Control.Monad.Trans.Class (lift)
+import System.Random (randomIO)
 
 data Rec = Rec
   { foo :: String
@@ -47,12 +46,12 @@ type Fields = '[ "foo2" >: String
                , "qux2" >: Bool
                ]
 
-type Rec2 = Field Identity :* Fields
+type Rec2 = Fields :& Field Identity
 
 mkField "foo2 bar2 baz2 qux2"
 
 class MakeRec kv where
-  make :: proxy kv -> IO (AssocValue kv)
+  make :: proxy kv -> IO (TargetOf kv)
 
 instance MakeRec ("foo2" >: String) where
   make _ = getLine
@@ -72,7 +71,7 @@ makeRec2 = hgenerateFor (Proxy @ MakeRec) (\m -> Field . pure <$> make m)
 ---
 
 class MakeRec2 kv where
-  make2 :: proxy kv -> TangleT (Field Identity) Fields IO (AssocValue kv)
+  make2 :: proxy kv -> TangleT Fields (Field Identity) IO (TargetOf kv)
 
 instance MakeRec2 ("foo2" :> String) where
   make2 _ = lift getLine
@@ -89,7 +88,7 @@ instance MakeRec2 ("qux2" :> Bool) where
     x   <- lasso baz2
     return $ str == show x
 
-tangles :: Comp (TangleT (Field Identity) Fields IO) (Field Identity) :* Fields
+tangles :: Fields :& Comp (TangleT Fields (Field Identity) IO) (Field Identity)
 tangles = htabulateFor (Proxy @ MakeRec2) (\m -> Comp $ Field . pure <$> make2 m)
 
 makeRec3 :: IO (Record Fields)

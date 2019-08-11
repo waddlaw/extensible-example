@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package mtl
 -}
 
@@ -34,10 +34,11 @@ testEff = replicateM_ 100 $ do
 
 runExtensible :: Eff '[ReaderDef Int, StateDef Int, WriterDef (Sum Int)] a
   -> ((a, Int), Sum Int)
-runExtensible = leaveEff
-              . runWriterDef
-              . flip runStateDef 0
-              . flip runReaderDef 1
+runExtensible
+  = leaveEff
+  . runWriterDef
+  . flip runStateDef 0
+  . flip runReaderDef 1
 
 main :: IO ()
 main = print $ runExtensible testEff

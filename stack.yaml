@@ -1,4 +1,6 @@
-resolver: lts-10.4
+resolver: lts-14.0
 packages:
 - .
-allow-newer: true
+extra-deps:
+- extensible-0.6.1
+- membership-0

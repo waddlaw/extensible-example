@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package mtl
 -}
 
@@ -13,15 +13,17 @@
 
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
-import           Data.Extensible.Effect.Default
+import Data.Extensible
+import Data.Extensible.Effect.Default
 
-import           Control.Monad.State            (MonadState, modify)
+import Control.Monad.State (MonadState, modify)
 
 increment :: (Num a, MonadState a m) => m ()
 increment = modify (+1)
 
-test :: (Associate "foo" (WriterEff String) xs, Associate "bar" (WriterEff String) xs) => Eff xs ()
+test :: ( Lookup xs "foo" (WriterEff String)
+        , Lookup xs "bar" (WriterEff String)
+        ) => Eff xs ()
 test = do
   tellEff #foo "Hello "
   tellEff #bar "hoge"

@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
@@ -9,11 +9,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TypeOperators    #-}
+
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Control.Lens    (view, (^.))
+import Control.Lens (view, (^.))
 
 type Person = Record
   '[ "personId" >: Int
@@ -25,7 +26,7 @@ type Address = Record
    , "address"  >: String
    ]
 
-getPersonId :: Associate "personId" Int xs => Record xs -> Int
+getPersonId :: Lookup xs "personId" Int => Record xs -> Int
 getPersonId = view #personId
 
 fubuki :: Person

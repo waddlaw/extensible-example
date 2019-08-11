@@ -1,24 +1,21 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-19
-   --package extensible-0.4.9
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
-{-# LANGUAGE DataKinds            #-}
-{-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE OverloadedLabels     #-}
-{-# LANGUAGE TypeApplications     #-}
-{-# LANGUAGE TypeOperators        #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedLabels  #-}
+{-# LANGUAGE TypeApplications  #-}
+{-# LANGUAGE TypeOperators     #-}
 
 import Data.Extensible
 
-import Control.Lens          (( # ), (^.))
+import Control.Lens ((#), (^.))
 import Data.Functor.Identity (runIdentity)
-import Data.Proxy            (Proxy (Proxy))
-import GHC.TypeLits          (KnownSymbol, symbolVal)
 
 {-
 data Color
@@ -98,17 +95,19 @@ instance Area Circle where
 instance Area Rect where
   area' = (*) <$> width <*> height
 
-instance Forall (KeyValue KnownSymbol Area) xs => Area (Variant xs) where
+instance Forall (KeyTargetAre KnownSymbol Area) xs => Area (Variant xs) where
   area' = matchField $
     htabulateFor c (const . Field . pureMatch $ area')
-    where c = Proxy @ (KeyValue KnownSymbol Area)
+    where
+      c = Proxy @(KeyTargetAre KnownSymbol Area)
 
 pureMatch :: (x -> r) -> Match Identity r x
 pureMatch f = Match $ f . runIdentity
 
 ---
 
-newtype Triangle = Triangle (Point, Point, Point) deriving (Show, Eq)
+newtype Triangle = Triangle (Point, Point, Point)
+  deriving (Show, Eq)
 
 type Shape2 = Variant
   '[ "circle"   >: Circle

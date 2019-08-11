@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-11
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package containers
    --package mtl
    --package monad-logger
@@ -12,24 +12,22 @@
 {-# LANGUAGE FlexibleInstances    #-}
 {-# LANGUAGE TypeApplications     #-}
 {-# LANGUAGE TypeOperators        #-}
-{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE UndecidableInstances #-}
 
-import           Data.Extensible
-import           Data.Extensible.Effect.Default
+{-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Control.Monad.Except           (throwError)
-import           Control.Monad.IO.Class         (MonadIO, liftIO)
-import           Control.Monad.Logger           (LoggingT, MonadLogger,
-                                                 monadLoggerLog,
-                                                 runStdoutLoggingT)
-import           Control.Monad.Reader           (ask, local)
-import           Control.Monad.State            (MonadState, get, put)
-import           Control.Monad.Writer           (tell)
-import           Data.Map                       (Map)
-import qualified Data.Map                       as Map
-import           Data.Maybe                     (fromJust)
-import           Data.Proxy                     (Proxy (Proxy))
+import Data.Extensible
+import Data.Extensible.Effect.Default
+
+import Control.Monad.Except (throwError)
+import Control.Monad.IO.Class (MonadIO, liftIO)
+import Control.Monad.Logger (LoggingT, MonadLogger, monadLoggerLog, runStdoutLoggingT)
+import Control.Monad.Reader (ask, local)
+import Control.Monad.State (MonadState, get, put)
+import Control.Monad.Writer (tell)
+import Data.Map (Map)
+import qualified Data.Map as Map
+import Data.Maybe (fromJust)
 
 type Name = String
 
@@ -276,11 +274,11 @@ type Logging = LoggingT IO
 runLoggerDef :: (MonadIO (Eff xs)) => Eff (LoggerDef ': xs) a -> Eff xs a
 runLoggerDef = peelEff0 pure $ \m k -> k =<< liftIO (runStdoutLoggingT m)
 
-instance (Associate "Logger" Logging xs) => MonadLogger (Eff xs) where
-  monadLoggerLog loc ls level = liftEff (Proxy @  "Logger") . monadLoggerLog loc ls level
+instance (Lookup xs "Logger" Logging) => MonadLogger (Eff xs) where
+  monadLoggerLog loc ls level = liftEff (Proxy @"Logger") . monadLoggerLog loc ls level
 
 liftIO' :: IO a -> Eval a
-liftIO' = liftEff (Proxy @ "Logger") . liftIO
+liftIO' = liftEff (Proxy @"Logger") . liftIO
 
 ---
 

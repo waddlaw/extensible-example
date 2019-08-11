@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-12
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
 -}
 
@@ -10,11 +10,12 @@
 {-# LANGUAGE OverloadedLabels #-}
 {-# LANGUAGE TemplateHaskell  #-}
 {-# LANGUAGE TypeOperators    #-}
+
 {-# OPTIONS_GHC -fno-warn-simplifiable-class-constraints #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Control.Lens    ((&), (.~), (^.))
+import Control.Lens ((&), (.~), (^.))
 
 mkField "name collective cry"
 
@@ -48,7 +49,7 @@ swan = name       @= "swan"
 
 -- collectiveOf :: Animal -> String
 collectiveOf
-  :: (Associate "name" String xs, Associate "collective" String xs)
+  :: (Lookup xs "name" String, Lookup xs "collective" String)
   => Record xs -> String
 collectiveOf a = unwords ["a", a ^. collective, "of", a ^. name ++ "s"]
 

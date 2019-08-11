@@ -1,7 +1,7 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-19
-   --package extensible-0.4.9
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package lens
    --package aeson
    --package bytestring
@@ -12,36 +12,33 @@
    --package vector
 -}
 
-{-# LANGUAGE DataKinds            #-}
-{-# LANGUAGE FlexibleContexts     #-}
-{-# LANGUAGE FlexibleInstances    #-}
-{-# LANGUAGE OverloadedLabels     #-}
-{-# LANGUAGE OverloadedStrings    #-}
-{-# LANGUAGE PolyKinds            #-}
-{-# LANGUAGE TypeApplications     #-}
-{-# LANGUAGE TypeOperators        #-}
-{-# LANGUAGE TypeSynonymInstances #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE FlexibleContexts  #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedLabels  #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE PolyKinds         #-}
+{-# LANGUAGE TypeApplications  #-}
+{-# LANGUAGE TypeOperators     #-}
 
-import           Data.Extensible
-import           Data.Extensible.Effect.Default
+import Data.Extensible
+import Data.Extensible.Effect.Default
 
-import           Control.Lens                   ((^.))
-import           Data.Proxy                     (Proxy (Proxy))
-import           GHC.TypeLits                   (KnownSymbol, symbolVal)
+import Control.Lens ((^.))
 
-import           Control.Monad.IO.Class         (liftIO)
-import           Control.Monad.Trans.Class      (lift)
-import           Control.Monad.Trans.Error      (throwError)
-import           Data.Aeson                     (eitherDecode)
-import           Data.ByteString.Lazy                (ByteString)
-import qualified Data.ByteString.Lazy                as B (intercalate, readFile)
-import           Data.Csv                       (Header, decodeByName)
-import           Data.String                    (fromString)
-import           Data.Text                      (Text)
+import Control.Monad.IO.Class (liftIO)
+import Control.Monad.Trans.Class (lift)
+-- import Control.Monad.Trans.Error (throwError)
+import Data.Aeson (eitherDecode)
+import Data.ByteString.Lazy (ByteString)
+import qualified Data.ByteString.Lazy as B (intercalate, readFile)
+import Data.Csv (Header, decodeByName)
+import Data.String(fromString)
+import Data.Text (Text)
 import Data.Vector (Vector)
-import qualified Data.Vector                    as V (head)
-import           System.Environment             (getArgs)
-import           System.Random                  (randomRIO)
+import qualified Data.Vector as V (head)
+import System.Environment (getArgs)
+import System.Random (randomRIO)
 
 type Rec = Record Fields
 type Fields =
@@ -66,12 +63,12 @@ makeRec' = runTangles tangles (wrench nil)
 
 type FieldI = Field Identity
 
-tangles :: Comp (TangleT FieldI Fields IO) FieldI :* Fields
+tangles :: Fields :& Comp (TangleT Fields FieldI IO) FieldI
 tangles = htabulateFor c (Comp . fmap (Field . pure) . make)
   where c = Proxy @ MakeRec
 
 class MakeRec kv where
-  make :: proxy kv -> TangleT FieldI Fields IO (AssocValue kv)
+  make :: proxy kv -> TangleT Fields FieldI IO (TargetOf kv)
 
 instance MakeRec ("hoge1" >: String) where
   make _ = lift getLine
@@ -121,7 +118,7 @@ header = B.intercalate "," $ keys xs
   where xs = Proxy @ CsvFields
 
 keys :: (Forall (KeyIs KnownSymbol) xs) => proxy xs -> [ByteString]
-keys xs = henumerateFor c xs ((:) . stringAssocKey) []
+keys xs = henumerateFor c xs ((:) . stringKeyOf) []
   where c = Proxy @ (KeyIs KnownSymbol)
 
 ----
