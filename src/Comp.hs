@@ -4,7 +4,7 @@
 {-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE RankNTypes #-}
 
-module ExComp where
+module Comp where
 
 import Data.Proxy
 

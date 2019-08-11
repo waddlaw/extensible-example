@@ -1,36 +1,50 @@
 #!/usr/bin/env stack
 {- stack repl
-   --resolver nightly-2018-05-14
-   --package extensible
+   --resolver lts-14.0
+   --package extensible-0.6.1
    --package text
 -}
 
-{-# LANGUAGE DataKinds        #-}
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedLabels #-}
-{-# LANGUAGE TypeApplications #-}
-{-# LANGUAGE TypeOperators    #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE FlexibleContexts    #-}
+{-# LANGUAGE OverloadedLabels    #-}
+{-# LANGUAGE PolyKinds           #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE TypeApplications    #-}
+{-# LANGUAGE TypeOperators       #-}
 
-import           Data.Extensible
+import Data.Extensible
 
-import           Data.Proxy      (Proxy (Proxy))
-import           Data.String     (IsString)
-import           Data.Text       (Text)
-import qualified Data.Text.IO    as TIO (putStrLn)
-import           GHC.TypeLits    (KnownSymbol)
+import Data.String (IsString)
+import Data.Text (Text)
+import qualified Data.Text.IO as TIO (putStrLn)
+import GHC.TypeLits
+import Data.Type.Bool
+import Data.Type.Equality
+
+import Data.Kind
 
 type Person = Record
   '[ "name" :> String
    , "age"  :> Int
    ]
 
+type A =
+  '[ "name" :> String
+  , "age"  :> Int
+  ]
+
 person :: Person
 person = #name @= "bigmoon"
       <: #age  @= 10
       <: nil
 
-keys :: (IsString key, Forall (KeyIs KnownSymbol) xs) => proxy xs -> [key]
-keys xs = henumerateFor (Proxy @ (KeyIs KnownSymbol)) xs ((:) . stringAssocKey) []
+keys :: (IsString key, Forall (KeyIs KnownSymbol) xs) => Record xs -> [key]
+keys (xs :: Record xs) = henumerateFor c xs' ((:) . stringKeyOf) []
+  where
+    c = Proxy @(KeyIs KnownSymbol)
+    xs' :: Proxy xs
+    xs' = Proxy
 
 main :: IO ()
 main = do

@@ -115,11 +115,13 @@ runEIO = retractEff . runEitherDef
 
 header :: ByteString
 header = B.intercalate "," $ keys xs
-  where xs = Proxy @ CsvFields
+  where
+    xs = Proxy @CsvFields
 
 keys :: (Forall (KeyIs KnownSymbol) xs) => proxy xs -> [ByteString]
 keys xs = henumerateFor c xs ((:) . stringKeyOf) []
-  where c = Proxy @ (KeyIs KnownSymbol)
+  where
+    c = Proxy @ (KeyIs KnownSymbol)
 
 ----
 

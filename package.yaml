@@ -2,16 +2,3 @@ name: extensible-example
 version: 0.1.0.0
 extra-source-files:
 - README.md
-
-dependencies:
-- base >= 4.7 && < 5
-- extensible
-- lens
-- singletons
-- text
-- ghc-prim
-
-executables:
-  extensible-example:
-    source-dirs: src
-    main: Main.hs
