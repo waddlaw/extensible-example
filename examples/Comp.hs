@@ -1,10 +1,12 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE RankNTypes #-}
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+-}
 
-module Comp where
+{-# LANGUAGE DataKinds    #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE PolyKinds    #-}
 
 import Data.Proxy
 
@@ -25,16 +27,18 @@ type family Apply (f :: k1 -> k2) (a :: k1) :: k2
 -- foo = Proxy
 
 {-
->>> :t Proxy :: Proxy (AddOne (AddOne Zero))
+> :set -XDataKinds
+> :t Proxy :: Proxy (AddOne (AddOne Zero))
 Proxy :: Proxy (AddOne (AddOne Zero))
+      :: Proxy ('Succ ('Succ 'Zero))
 
->>> :t Proxy :: Proxy (Comp AddOne AddOne Zero)
+> :t Proxy :: Proxy (Comp AddOne AddOne Zero)
 <interactive>:1:10: error:
     • The type family ‘AddOne’ should have 1 argument, but has been given none
     • In an expression type signature: Proxy (Comp AddOne AddOne Zero)
       In the expression: Proxy :: Proxy (Comp AddOne AddOne Zero)
 
->>> :t undefined :: Comp AddOne AddOne Zero
+> :t undefined :: Comp AddOne AddOne Zero
 <interactive>:1:14: error:
     • Expected a type, but ‘Comp AddOne AddOne 'Zero’ has kind ‘Nat’
     • In an expression type signature: Comp AddOne AddOne Zero

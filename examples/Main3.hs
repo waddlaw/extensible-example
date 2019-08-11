@@ -1,7 +1,14 @@
-{-# LANGUAGE DataKinds #-}
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+-}
+
+{-# LANGUAGE DataKinds           #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE KindSignatures      #-}
+{-# LANGUAGE TypeOperators       #-}
+
 import Data.Proxy
 import GHC.TypeLits
 

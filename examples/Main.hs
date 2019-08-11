@@ -1,11 +1,19 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+   --package lens
+-}
+
+{-# LANGUAGE DataKinds        #-}
+{-# LANGUAGE TypeOperators    #-}
 {-# LANGUAGE OverloadedLabels #-}
+
 module Main where
 
 import Data.Extensible
 import Data.Extensible.GetOpt
-import Data.Proxy
+
 import Control.Lens hiding ((:>))
 import Data.Typeable
 
@@ -77,6 +85,8 @@ test2 = #num @= ()
   <: #str @= ()
   <: nil
 
-data MyData = MyDataA | MyDataB
+data MyData
+  = MyDataA
+  | MyDataB
 
 -- AssocValue (Proxy :: "num" >: MyData)

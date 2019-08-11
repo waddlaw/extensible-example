@@ -1,23 +1,29 @@
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE GADTs #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeInType #-}
-{-# LANGUAGE TemplateHaskell #-}
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package singletons
+-}
+
+{-# LANGUAGE KindSignatures       #-}
+{-# LANGUAGE DataKinds            #-}
+{-# LANGUAGE GADTs                #-}
+{-# LANGUAGE TypeFamilies         #-}
+{-# LANGUAGE TypeOperators        #-}
+{-# LANGUAGE TypeInType           #-}
+{-# LANGUAGE TemplateHaskell      #-}
 {-# LANGUAGE UndecidableInstances #-}
-{-# LANGUAGE ExplicitForAll #-}
+{-# LANGUAGE ExplicitForAll       #-}
 
 module Paper where
 
 import Prelude hiding (span)
-import Data.Promotion.TH (promote)
-import Data.Promotion.Prelude ((:$))
+import Data.Singletons.TH (promote)
+import Data.Singletons.Prelude ((:$))
 
 -- 2.1 Datakinds
 data OperatingSystem (unixLike :: Bool) where
-  MacOS :: OperatingSystem True
-  Linux :: OperatingSystem True
+  MacOS   :: OperatingSystem True
+  Linux   :: OperatingSystem True
   Windows :: OperatingSystem False
 
 -- 2.2 Type families

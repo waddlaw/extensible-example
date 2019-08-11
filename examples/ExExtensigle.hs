@@ -1,10 +1,17 @@
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE OverloadedLabels #-}
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+   --package text
+-}
+
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE OverloadedLabels  #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE PolyKinds         #-}
+{-# LANGUAGE TypeFamilies      #-}
+
 module Main where
 
 import Data.Extensible
@@ -22,7 +29,7 @@ type B = Record '[
 type C = AppendRecord A B
 
 type family AppendRecord (r1 :: *) (r2 :: *) :: * where
-  AppendRecord (h:*xs) (h2:*ys) = h:*(xs++ys)
+  AppendRecord (xs :& h1) (ys :& h2) = (xs++ys) :& h1
 
 p1 :: A
 p1 = #name @= "guchi"
@@ -42,4 +49,4 @@ main = do
   print p1
   print p2
   print $ p1 `happend` p2
-  print $ p3
+  print p3

@@ -1,3 +1,9 @@
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+-}
+
 module Main (main) where
 
 data Nat = Zero | Succ Nat

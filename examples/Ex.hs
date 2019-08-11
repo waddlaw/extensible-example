@@ -1,22 +1,28 @@
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+   --package text
+-}
+
+{-# LANGUAGE DataKinds        #-}
 {-# LANGUAGE OverloadedLabels #-}
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE TypeFamilies #-}
-{-# LANGUAGE PolyKinds #-}
+{-# LANGUAGE TypeOperators    #-}
 
 import Data.Extensible
+
 import Data.Text
-import Data.Proxy
 import GHC.TypeLits
 
-newtype AssocValue' a = AssocValue' { getValue :: Proxy (AssocValue a) }
+newtype AssocValue' a = AssocValue' { getValue :: Proxy (TargetOf a) }
 
 baz :: RecordOf Proxy '["name" >: "guchi", "age" >: "18"]
 baz = #name @= () <: #age @= () <: nil
 
-proxy :: Proxy (KeyValue KnownSymbol KnownSymbol)
+proxy :: Proxy (KeyTargetAre KnownSymbol KnownSymbol)
 proxy = Proxy
 
--- hfoldMapFor proxy ((: []) . symbolVal . getValue) $  hmap (AssocValue' . getField) baz
--- hfoldMapFor proxy ((: []) . symbolVal . getField) baz
+main :: IO ()
+main = do
+  -- print $ hfoldMapFor proxy ((: []) . symbolVal . getValue) $ hmap (AssocValue' . getField) baz
+  print $ hfoldMapFor proxy ((: []) . symbolVal . getField) baz

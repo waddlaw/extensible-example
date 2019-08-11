@@ -1,9 +1,16 @@
+#!/usr/bin/env stack
+{- stack repl
+   --resolver lts-14.0
+   --package extensible-0.6.1
+-}
+
 {-# LANGUAGE DataKinds            #-}
 {-# LANGUAGE TypeFamilies         #-}
 {-# LANGUAGE UndecidableInstances #-}
+
 module Main (main) where
 
-import Data.Proxy
+import Data.Typeable
 
 data Nat = Zero | Succ Nat
 
@@ -29,4 +36,5 @@ bar = Proxy
 
 main :: IO ()
 main = do
-  
+  print $ typeOf foo
+  print $ typeOf bar
