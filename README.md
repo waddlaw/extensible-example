@@ -2,6 +2,16 @@
 
 ## データ移行中
 
-- [ ] `wiki-contents/Eff/Eff.hs`
-- [ ] `wiki-contents/Eff/Increment.hs`
-- [ ] `wiki-contents/Eff/NamedEff.hs`
+### wiki-contents
+
+- [x] `wiki-contents/Eff/Eff.hs`
+- [x] `wiki-contents/Eff/Increment.hs`
+- [x] `wiki-contents/Eff/NamedEff.hs`
+- [ ] `wiki-contents/quest/GetOpt.hs`
+- [ ] `wiki-contents/skill/ConstraintKinds.hs`
+- [ ] `wiki-contents/skill/OverloadedLabels.hs`
+- [ ] `wiki-contents/technique/ReusableTypeList.hs`
+- [ ] `wiki-contents/technique/TypelevelProgramming.hs`
+- [ ] `wiki-contents/variant/Basic.hs`
+- [ ] `wiki-contents/variant/ShrinkAssoc.hs`
+- [ ] `wiki-contents/variant/Value.hs`
